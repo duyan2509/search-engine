@@ -55,6 +55,34 @@ MongoDB Sharded Cluster
 
 11 containers total: 3 config servers, 3+3 shard nodes, 2 routers.
 
+## Component reference
+
+Every container is reachable two ways: by its container name from inside
+`mongodb-network` (what the containers use to talk to each other), and by
+`localhost:<host port>` from the host machine (what you use to `mongosh`
+into or `docker exec` a specific node).
+
+| Component | Container name | Replica set | In-network address | Host URL |
+|---|---|---|---|---|
+| Mongos router | `mongos-router-1` | — | `mongos-router-1:27017` | `mongodb://localhost:27100` |
+| Mongos router | `mongos-router-2` | — | `mongos-router-2:27017` | `mongodb://localhost:27200` |
+| Config server | `mongo-config-server-1` | `mongo-config-server-rs` | `mongo-config-server-1:27017` | `mongodb://localhost:27001` |
+| Config server | `mongo-config-server-2` | `mongo-config-server-rs` | `mongo-config-server-2:27017` | `mongodb://localhost:27002` |
+| Config server | `mongo-config-server-3` | `mongo-config-server-rs` | `mongo-config-server-3:27017` | `mongodb://localhost:27003` |
+| Shard 1 node | `mongo-shard1-1` | `mongo-shard1-rs` | `mongo-shard1-1:27017` | `mongodb://localhost:27101` |
+| Shard 1 node | `mongo-shard1-2` | `mongo-shard1-rs` | `mongo-shard1-2:27017` | `mongodb://localhost:27102` |
+| Shard 1 node | `mongo-shard1-3` | `mongo-shard1-rs` | `mongo-shard1-3:27017` | `mongodb://localhost:27103` |
+| Shard 2 node | `mongo-shard2-1` | `mongo-shard2-rs` | `mongo-shard2-1:27017` | `mongodb://localhost:27201` |
+| Shard 2 node | `mongo-shard2-2` | `mongo-shard2-rs` | `mongo-shard2-2:27017` | `mongodb://localhost:27202` |
+| Shard 2 node | `mongo-shard2-3` | `mongo-shard2-rs` | `mongo-shard2-3:27017` | `mongodb://localhost:27203` |
+
+**Application entry point** (goes through both routers, which then fan the
+query out to the right shard(s)):
+
+```
+mongodb://localhost:27100,localhost:27200
+```
+
 ## Steps
 
 ### 1. Create a Docker network
