@@ -10,6 +10,26 @@ level.
 **Goal:** build a MongoDB Sharded Cluster to support horizontal scaling and
 high availability for the Inverted Index Storage / Database components.
 
+## Quick start (Docker Compose)
+
+The topology below is captured as a [`docker-compose.yml`](../docker-compose.yml)
+at the repo root, so the 11 containers don't need to be started by hand:
+
+```bash
+docker compose up -d
+./init-cluster.sh
+```
+
+`docker compose up -d` starts all containers on the `mongodb-network`.
+[`init-cluster.sh`](../init-cluster.sh) then runs the one-time
+`rs.initiate(...)` calls for each replica set and `sh.addShard(...)` to
+register both shards with the router — steps compose itself can't express,
+since they're commands run *inside* already-running mongod/mongos processes,
+not container startup config.
+
+The manual steps below show what that script and compose file are doing
+under the hood, container by container.
+
 ## Target topology
 
 ```
