@@ -32,6 +32,8 @@ under the hood, container by container.
 
 ## Target topology
 
+![MongoDB sharded cluster architecture: a client connects through two mongos routers, which route metadata lookups to a 3-node config server replica set and route data queries to two 3-node shard replica sets](./images/mongodb-cluster-architecture.svg)
+
 ```
 MongoDB Sharded Cluster
 ├── Config Servers (Replica Set: mongo-config-server-rs)
